@@ -428,21 +428,29 @@
 				const ION_TOKEN_FILE_PATH = './.token';
 
 				async function loadIonAccessToken() {
-					if (location.protocol === 'file:') {
-						throw new Error('This page cannot load .token via file://. Start a local web server and open CesiumMap/index.html through http://localhost.');
-					}
+					try {
+						if (location.protocol === 'file:') {
+							console.warn('Running from file:// - .token cannot be fetched; continuing without Cesium Ion token.');
+							return '';
+						}
 
-					const response = await fetch(ION_TOKEN_FILE_PATH, { cache: 'no-store' });
-					if (!response.ok) {
-						throw new Error(`Failed to load ${ION_TOKEN_FILE_PATH}: ${response.status} ${response.statusText}`);
-					}
+						const response = await fetch(ION_TOKEN_FILE_PATH, { cache: 'no-store' });
+						if (!response.ok) {
+							console.warn(`No .token found at ${ION_TOKEN_FILE_PATH} (${response.status}) — continuing without Cesium Ion token.`);
+							return '';
+						}
 
-					const token = (await response.text()).trim();
-					if (!token) {
-						throw new Error('The Cesium Ion token file is empty.');
-					}
+						const token = (await response.text()).trim();
+						if (!token) {
+							console.warn('The Cesium Ion token file is empty; continuing without token.');
+							return '';
+						}
 
-					return token;
+						return token;
+					} catch (err) {
+						console.warn('Failed to load Ion token (network or permission error); continuing without token.', err);
+						return '';
+					}
 				}
 
 				Cesium.Ion.defaultAccessToken = await loadIonAccessToken();
