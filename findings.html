@@ -7,309 +7,252 @@
 	<script src="https://cesium.com/downloads/cesiumjs/releases/1.139.1/Build/Cesium/Cesium.js"></script>
 	<link href="https://cesium.com/downloads/cesiumjs/releases/1.139.1/Build/Cesium/Widgets/widgets.css" rel="stylesheet">
 	<script src="https://cdn.jsdelivr.net/npm/satellite.js@5.0.0/dist/satellite.min.js"></script>
+	<link rel="preconnect" href="https://fonts.googleapis.com">
+	<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+	<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@500;700;800&family=Rajdhani:wght@500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
 	<style>
-		:root {
-			--panel-bg: rgba(10, 18, 31, 0.84);
-			--panel-border: rgba(255, 255, 255, 0.22);
-			--text: #eaf4ff;
-			--accent: #7dd3fc;
-			--accent-2: #34d399;
-			--danger: #fca5a5;
-		}
+	  :root {
+		--bg-a: #0f1c2d;
+		--bg-b: #162843;
+		--bg-c: #26435c;
+		--panel: rgba(10, 21, 35, 0.78);
+		--panel-soft: rgba(16, 31, 51, 0.66);
+		--line: rgba(122, 224, 255, 0.3);
+		--line-strong: rgba(122, 224, 255, 0.65);
+		--text: #ecf6ff;
+		--text-soft: #b7cee5;
+		--accent: #7ae0ff;
+		--alert: #ff8f66;
+		--safe: #8cf8c3;
+		--shadow: 0 24px 55px rgba(2, 10, 18, 0.42);
+	  }
 
-		body {
-			margin: 0;
-			font-family: Arial, sans-serif;
-			line-height: 1.5;
-			background: #f4f6f8;
-			color: #17212b;
-		}
+	  * { box-sizing: border-box; }
+	  html, body { margin:0; min-height:100%; color:var(--text); font-family: "Rajdhani", "Segoe UI", sans-serif; background: linear-gradient(140deg, var(--bg-a) 0%, var(--bg-b) 45%, var(--bg-c) 100%); overflow-x:hidden; }
 
-		main {
-			max-width: 900px;
-			margin: 0 auto;
-			padding: 1rem;
-		}
+	  body::before { content: ""; position: fixed; inset:0; pointer-events:none; background-image: linear-gradient(rgba(127,205,242,0.05) 1px, transparent 1px), linear-gradient(90deg, rgba(127,205,242,0.05) 1px, transparent 1px); background-size:28px 28px; mix-blend-mode:screen; z-index:0; }
 
-		nav {
-			display: flex;
-			flex-wrap: wrap;
-			gap: 0.5rem;
-			margin-bottom: 1rem;
-		}
+	  .deck { position: relative; z-index:1; width: min(1240px, calc(100% - 1.6rem)); margin: 1rem auto; padding:1rem; border-radius:24px; border:1px solid var(--line); background: linear-gradient(155deg, rgba(5,14,24,0.84), rgba(13,29,47,0.74)); box-shadow:var(--shadow); backdrop-filter: blur(4px); }
 
-		nav a {
-			text-decoration: none;
-			padding: 0.35rem 0.6rem;
-			border: 1px solid #b8c4cf;
-			border-radius: 6px;
-			color: #17212b;
-			background: #fff;
-			font-size: 0.9rem;
-		}
+	  .topbar { display: grid; grid-template-columns: 1fr auto; gap: 1rem; align-items:center; border:1px solid var(--line); border-radius:16px; padding:0.85rem 1rem; background: linear-gradient(180deg, rgba(18,41,64,0.7), rgba(8,20,35,0.72)); }
+	  .tagline { display:flex; align-items:center; gap:0.8rem; min-width:0; }
+	  .beacon { width:14px; height:14px; border-radius:50%; background:var(--accent); box-shadow:0 0 0 0 rgba(122,224,255,0.7); animation: ping 2.1s infinite; flex-shrink:0; }
+	  .label { margin:0; font-family: "IBM Plex Mono", monospace; font-size:0.73rem; letter-spacing:0.17em; text-transform:uppercase; color:var(--text-soft); }
+	  .title { margin:0.15rem 0 0; font-family: "Orbitron", sans-serif; font-size: clamp(1rem,2.2vw,1.45rem); letter-spacing:0.05em; text-transform:uppercase; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+	  .epoch { border:1px solid var(--line-strong); border-radius:999px; padding:0.45rem 0.75rem; font-family: "IBM Plex Mono", monospace; font-size:0.75rem; color:var(--accent); background: rgba(6,20,35,0.7); white-space:nowrap; }
+	  .top-links { display:flex; flex-wrap:wrap; gap:0.45rem; justify-content:flex-end; }
+	  .top-links a { text-decoration:none; color:var(--text); border:1px solid rgba(122,224,255,0.4); border-radius:999px; padding:0.35rem 0.6rem; font-family: "IBM Plex Mono", monospace; font-size:0.68rem; text-transform:uppercase; letter-spacing:0.08em; background: rgba(8,21,35,0.88); }
 
-		section {
-			background: #fff;
-			border: 1px solid #d5dde5;
-			border-radius: 8px;
-			padding: 0.8rem;
-			margin-bottom: 0.8rem;
-		}
+	  .main-grid { margin-top:0.95rem; display:grid; grid-template-columns: 1.5fr 0.9fr; gap:0.9rem; }
+	  .card { border:1px solid var(--line); border-radius:16px; background: linear-gradient(180deg, var(--panel), var(--panel-soft)); padding:1rem; position:relative; overflow:hidden; }
 
-		h1, h2 {
-			margin-top: 0;
-		}
+	  .quote { margin: 0 0 0.8rem 1.5rem; padding-left:1rem; border-left:3px solid rgba(122,224,255,0.12); color:#c7ddf0; }
 
-		.placeholder {
-			color: #5c6f82;
-			font-style: italic;
-		}
+	  .lead { color:#e7f2ff; font-size:1.02rem; line-height:1.55; }
 
-		.note {
-			background: #eef4fa;
-			border: 1px solid #c6d8ea;
-			border-radius: 8px;
-			padding: 0.65rem;
-			margin-bottom: 0.8rem;
-		}
+	  .link-grid a { text-decoration:none; color:var(--text); border:1px solid rgba(122,224,255,0.4); border-radius:12px; background: linear-gradient(180deg, rgba(14,37,58,0.82), rgba(8,21,35,0.88)); padding:0.72rem 0.8rem; text-transform:uppercase; font-family: "Orbitron", sans-serif; font-size:0.8rem; display:flex; justify-content:space-between; align-items:center; }
 
-		.indent {
-			margin-left: 1.5rem;
-		}
+	  #embeddedCesiumSection { position:relative; border:1px solid var(--line); border-radius:12px; overflow:hidden; background: rgba(6, 19, 33, 0.72); margin: 0.8rem 0; }
+	  #embeddedCesiumHeader { padding:0.8rem; border-bottom:1px solid rgba(122,224,255,0.22); background: rgba(8,20,35,0.7); }
+	  #embeddedCesiumHeader h2 { margin:0; }
+	  #embeddedControlPanel { position:absolute; z-index:20; top: 100px; left:1px; width:min(380px, calc(100% - 28px)); background: rgba(10, 18, 31, 0.84); border:1px solid rgba(255,255,255,0.22); border-radius:12px; backdrop-filter: blur(8px); box-shadow:0 10px 28px rgba(0,0,0,0.45); padding:12px; line-height:1.35; max-height:calc(100% - 148px); overflow-y:auto; }
+	  #embeddedControlPanel h1 { margin:0; font-size:1rem; color:var(--accent); letter-spacing:0.03em; text-transform:uppercase; }
+	  #embeddedControlPanel p { margin:0 0 10px; opacity:0.95; font-size:0.9rem; color:#eaf4ff; }
+	  #embeddedControlPanel.collapsed { width:auto; max-width:calc(100% - 28px); padding:10px 12px; }
+	  #embeddedControlPanel.collapsed #panelContent { display:none; }
+	  .panel-header { display:flex; align-items:center; justify-content:space-between; gap:8px; margin-bottom:8px; }
+	  #panelToggleBtn { border:1px solid rgba(255,255,255,0.35); border-radius:8px; padding:4px 8px; font-size:0.75rem; color:#eaf4ff; background:rgba(255,255,255,0.08); cursor:pointer; }
+	  .controls { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:8px; margin-bottom:10px; }
+	  .controls label { display:block; font-size:0.78rem; margin-bottom:3px; color:#bfdbfe; }
+	  .controls input, .controls select, #groupSelect, #multiGroupSelect { width:100%; box-sizing:border-box; border-radius:7px; border:1px solid rgba(255,255,255,0.28); padding:7px; background:rgba(255,255,255,0.08); color:#eaf4ff; }
+	  #groupSelect { margin-bottom:10px; }
+	  #multiGroupSelect { min-height:108px; margin-bottom:10px; }
+	  #multiGroupSection { margin-bottom:10px; padding:8px; border:1px solid rgba(255,255,255,0.2); border-radius:8px; background:rgba(255,255,255,0.04); }
+	  .toggle-row { display:flex; align-items:center; gap:8px; margin-bottom:8px; font-size:0.8rem; color:#bfdbfe; }
+	  #loadBtn { width:100%; border:none; border-radius:8px; padding:9px; font-weight:600; color:#021119; background:linear-gradient(90deg, #7ae0ff, #8cf8c3); cursor:pointer; }
+	  #groupNote { margin-top:8px; font-size:0.78rem; color:#fde68a; min-height:1rem; }
+	  #sourceNote { margin-top:6px; font-size:0.75rem; color:#a7f3d0; min-height:1rem; }
+	  #datasetIndicator { margin-top:6px; font-size:0.75rem; color:#93c5fd; min-height:1rem; }
+	  #datasetIndicator.error { color:#fca5a5; }
+	  #status { margin-top:8px; font-size:0.8rem; min-height:1.1rem; color:#dbeafe; }
+	  #status.error { color:#fca5a5; }
 
-		.quote {
-			margin: 0 0 0.8rem 1.5rem;
-			padding-left: 1rem;
-			border-left: 3px solid #b8c4cf;
-			color: #3c4a57;
-		}
+	  #embeddedCesiumContainer { width:100%; height:500px; background: radial-gradient(circle at 20% 20%, #16345f 0%, #071223 55%, #02050b 100%); overflow:hidden; border-radius:12px; }
 
-		#embeddedCesiumSection {
-			position: relative;
-			background: #fff;
-			border: 1px solid #d5dde5;
-			border-radius: 8px;
-			padding: 0;
-			margin-bottom: 0.8rem;
-			overflow: hidden;
-		}
+	  @keyframes ping { 0% { box-shadow: 0 0 0 0 rgba(122,224,255,0.65);} 70% { box-shadow:0 0 0 14px rgba(122,224,255,0);} 100% { box-shadow:0 0 0 0 rgba(122,224,255,0);} }
+	  @media (max-width:980px) { .main-grid { grid-template-columns:1fr; } .topbar { grid-template-columns:1fr; } .top-links { justify-content:flex-start; } }
+	.status-row { display:flex; flex-wrap:wrap; gap:0.5rem; margin-bottom:0.7rem; }
+	.chip { border:1px solid var(--line); border-radius:999px; padding:0.34rem 0.62rem; font-family: "IBM Plex Mono", monospace; font-size:0.7rem; text-transform:uppercase; letter-spacing:0.09em; background: rgba(9,22,37,0.76); color:var(--text-soft); }
+	.chip.alert { color:#ffd4c4; border-color: rgba(255,143,102,0.65); background: rgba(61,27,21,0.75); }
+	.telemetry { margin-top:1rem; display:grid; grid-template-columns: repeat(3, minmax(0,1fr)); gap:0.55rem; }
+	.tile { border:1px solid rgba(122,224,255,0.28); border-radius:10px; padding:0.62rem; background: rgba(6,19,33,0.72); min-height:85px; }
+	.tile .k { font-family: "IBM Plex Mono", monospace; text-transform:uppercase; letter-spacing:0.09em; font-size:0.67rem; color:#a8c2da; }
+	.tile .v { display:block; margin-top:0.3rem; font-family: "Orbitron", sans-serif; font-size:1.17rem; color:#f2fbff; }
+	.tile .bar { margin-top:0.38rem; height:6px; border-radius:999px; background: rgba(86,132,168,0.35); overflow:hidden; }
+	.tile .bar span { display:block; height:100%; border-radius:inherit; background: linear-gradient(90deg, #7ae0ff, #8cf8c3); animation: sweep 2s ease-out both; }
+	.right-column { display:grid; gap:0.9rem; }
+	.threat-meter { border:1px solid rgba(255,143,102,0.45); border-radius:14px; padding:0.9rem; background: linear-gradient(180deg, rgba(47,26,23,0.7), rgba(24,15,17,0.7)); }
+	.threat-meter h3 { margin:0; font-family: "Orbitron", sans-serif; font-size:0.9rem; text-transform:uppercase; letter-spacing:0.11em; color:#ffc8b3; }
+	.gauge { margin-top:0.78rem; height:14px; border-radius:999px; border:1px solid rgba(255,143,102,0.5); background: rgba(33,20,18,0.85); overflow:hidden; position:relative; }
+	.gauge span { display:block; height:100%; width:72%; background: linear-gradient(90deg,#ffd069 0%,#ff8f66 62%,#ff6d6d 100%); box-shadow:0 0 18px rgba(255,143,102,0.4); animation: expand 1.2s ease-out; }
+	.meter-note { margin:0.65rem 0 0; color:#ffd8cc; line-height:1.45; font-size:0.98rem; }
+	.caption { margin-top:0.95rem; border-top:1px dashed rgba(122,224,255,0.3); padding-top:0.8rem; color:#c7ddf0; font-family: "IBM Plex Mono", monospace; font-size:0.77rem; line-height:1.5; letter-spacing:0.03em; }
 
-		#embeddedCesiumHeader {
-			padding: 0.8rem;
-			background: #f9fafb;
-			border-bottom: 1px solid #e5e7eb;
-		}
-
-		#embeddedCesiumHeader h2 {
-			margin: 0;
-		}
-
-		#embeddedControlPanel {
-			position: absolute;
-			z-index: 20;
-			top: 56px;
-			left: 14px;
-			width: min(380px, calc(100% - 28px));
-			background: var(--panel-bg);
-			border: 1px solid var(--panel-border);
-			border-radius: 12px;
-			backdrop-filter: blur(8px);
-			box-shadow: 0 10px 28px rgba(0, 0, 0, 0.45);
-			padding: 12px;
-			line-height: 1.35;
-			max-height: calc(100% - 80px);
-			overflow-y: auto;
-		}
-
-		.panel-header {
-			display: flex;
-			align-items: center;
-			justify-content: space-between;
-			gap: 8px;
-			margin-bottom: 8px;
-		}
-
-		#panelToggleBtn {
-			border: 1px solid rgba(255, 255, 255, 0.35);
-			border-radius: 8px;
-			padding: 4px 8px;
-			font-size: 0.75rem;
-			color: var(--text);
-			background: rgba(255, 255, 255, 0.08);
-			cursor: pointer;
-		}
-
-		#embeddedControlPanel.collapsed {
-			width: auto;
-			max-width: calc(100% - 28px);
-			padding: 10px 12px;
-		}
-
-		#embeddedControlPanel.collapsed #panelContent {
-			display: none;
-		}
-
-		#embeddedControlPanel h1 {
-			margin: 0;
-			font-size: 1rem;
-			color: var(--accent);
-			letter-spacing: 0.03em;
-			text-transform: uppercase;
-		}
-
-		#embeddedControlPanel p {
-			margin: 0 0 10px;
-			opacity: 0.95;
-			font-size: 0.9rem;
-		}
-
-		.controls {
-			display: grid;
-			grid-template-columns: repeat(2, minmax(0, 1fr));
-			gap: 8px;
-			margin-bottom: 10px;
-		}
-
-		.controls label {
-			display: block;
-			font-size: 0.78rem;
-			margin-bottom: 3px;
-			color: #bfdbfe;
-		}
-
-		.controls input,
-		.controls select {
-			width: 100%;
-			box-sizing: border-box;
-			border-radius: 7px;
-			border: 1px solid rgba(255, 255, 255, 0.28);
-			padding: 7px;
-			background: rgba(255, 255, 255, 0.08);
-			color: var(--text);
-		}
-
-		#groupSelect {
-			width: 100%;
-			margin-bottom: 10px;
-			box-sizing: border-box;
-			border-radius: 7px;
-			border: 1px solid rgba(255, 255, 255, 0.28);
-			padding: 7px;
-			background: rgba(255, 255, 255, 0.08);
-			color: var(--text);
-		}
-
-		#multiGroupSelect {
-			width: 100%;
-			min-height: 108px;
-			margin-bottom: 10px;
-			box-sizing: border-box;
-			border-radius: 7px;
-			border: 1px solid rgba(255, 255, 255, 0.28);
-			padding: 7px;
-			background: rgba(255, 255, 255, 0.08);
-			color: var(--text);
-		}
-
-		#multiGroupSection {
-			margin-bottom: 10px;
-			padding: 8px;
-			border: 1px solid rgba(255, 255, 255, 0.2);
-			border-radius: 8px;
-			background: rgba(255, 255, 255, 0.04);
-		}
-
-		.toggle-row {
-			display: flex;
-			align-items: center;
-			gap: 8px;
-			margin-bottom: 8px;
-			font-size: 0.8rem;
-			color: #bfdbfe;
-		}
-
-		#loadBtn {
-			width: 100%;
-			border: none;
-			border-radius: 8px;
-			padding: 9px;
-			font-weight: 600;
-			color: #021119;
-			background: linear-gradient(90deg, var(--accent), var(--accent-2));
-			cursor: pointer;
-		}
-
-		#groupNote {
-			margin-top: 8px;
-			font-size: 0.78rem;
-			color: #fde68a;
-			min-height: 1rem;
-		}
-
-		#sourceNote {
-			margin-top: 6px;
-			font-size: 0.75rem;
-			color: #a7f3d0;
-			min-height: 1rem;
-		}
-
-		#datasetIndicator {
-			margin-top: 6px;
-			font-size: 0.75rem;
-			color: #93c5fd;
-			min-height: 1rem;
-		}
-
-		#datasetIndicator.error {
-			color: #fca5a5;
-		}
-
-		#status {
-			margin-top: 8px;
-			font-size: 0.8rem;
-			min-height: 1.1rem;
-			color: #dbeafe;
-		}
-
-		#status.error {
-			color: var(--danger);
-		}
-
-		#embeddedCesiumContainer {
-			width: 100%;
-			height: 500px;
-			background: radial-gradient(circle at 20% 20%, #16345f 0%, #071223 55%, #02050b 100%);
-			overflow: hidden;
-		}
+	@keyframes sweep { from { width: 0; } to { width: 100%; } }
+	@keyframes expand { from { width: 0; } to { width: 72%; } }
 	</style>
 </head>
 <body>
-	<main>
-		<nav aria-label="Page navigation">
-			<a href="intro.html">Intro</a>
-			<a href="methods.html">Methods</a>
-			<a href="literature.html">Literature</a>
-			<a href="findings.html">Findings</a>
-			<a href="conclusion.html">Conclusion</a>
-			<a href="works-cited.html">Works Cited</a>
-			<a href="SpaceMap.html">SpaceMap</a>
-		</nav>
+	<main class="deck">
+		<header class="topbar" aria-label="Control deck status header">
+			<div class="tagline">
+				<span class="beacon" aria-hidden="true"></span>
+				<div>
+					<p class="label">Orbital Traffic Research Deck</p>
+					<p class="title">Analysis and Findings</p>
+				</div>
+			</div>
+			<nav class="top-links" aria-label="Research navigation">
+				<a href="index.html">Intro</a>
+				<a href="methods.html">Methods</a>
+				<a href="literature.html">Literature</a>
+				<a href="findings.html">Findings</a>
+				<a href="conclusion.html">Conclusion</a>
+				<a href="works-cited.html">Works Cited</a>
+			</nav>
+		</header>
 
-		<h1>Analysis and Findings</h1>
-		<p class="placeholder">Draft space for what your analysis shows and how it answers your question.</p>
-		<div class="note">
-			<strong>Rubric target:</strong> Walk readers through discoveries and discuss your visualizations directly.
-		</div>
+		<section class="main-grid" aria-label="Findings content">
+			<article class="card" aria-labelledby="findings-title">
+				<div class="status-row" aria-label="page tags" style="margin-bottom:0.6rem;">
+					<span class="chip">Visualizations</span>
+					<span class="chip">CesiumJS Map</span>
+				</div>
 
-		
+				<h2 id="findings-title">Analysis and Findings</h2>
+				<p class="lead">Draft space for what your analysis shows and how it answers your question.</p>
+				<div class="note">
+					<strong>Rubric target:</strong> Walk readers through discoveries and discuss your visualizations directly.
+				</div>
 
-		<section>
-			<h2>Visualizations and Interpretation</h2>
+				<section>
+					<h3>Visualizations and Interpretation</h3>
 			<p>From the mid 20th century to the early 21st century, there has been an exponential growth of active satellites in orbit, especially in the last few years. At the beginning of 1960, there were two active satellites in orbit. In 1980 there were 304. In 2000, there were 2,283. As of April of 2026, there are currently 15,439 satellites in orbit. Of this recent massive increase in numbers, the vast majority (a little over 10,000) are part of Starlink’s mega constellation. As other corporations and countries plan to bring their own megaconstellations online, this number is likely to skyrocket even further. Blue Origin plans to place approximately 50,000 satellites in LEO (CITE), and Starlink announced further plans to place a million “AI Datacenter” satellites in a higher orbit. (CITE).</p>
-			<p class="indent">&lt;ADD BAR CHART&gt;</p>
+			<div class="indent">
+				<figure style="margin:0 0 0.8rem 0;">
+					<img src="Images/Active_Satellites.png" alt="Active Satellites" style="width:100%;height:auto;border:1px solid #d5dde5;border-radius:6px;">
+					<figcaption style="font-size:0.9rem;color:#5c6f82;margin-top:0.35rem;">Active satellites over time</figcaption>
+				</figure>
+				<div style="display:flex;gap:12px;flex-wrap:wrap;margin-bottom:0.8rem;">
+					<figure style="flex:1 1 320px;margin:0;">
+						<img src="Images/ASAT_Test.png" alt="ASAT Test" style="width:100%;height:auto;border:1px solid #d5dde5;border-radius:6px;">
+						<figcaption style="font-size:0.85rem;color:#5c6f82;margin-top:0.35rem;">ASAT test debris</figcaption>
+					</figure>
+					<figure style="flex:1 1 320px;margin:0;">
+						<img src="Images/Space_objects.png" alt="Space Objects" style="width:100%;height:auto;border:1px solid #d5dde5;border-radius:6px;">
+						<figcaption style="font-size:0.85rem;color:#5c6f82;margin-top:0.35rem;">Space objects overview</figcaption>
+					</figure>
+				</div>
+			</div>
 			<p class="indent">In the discussion with Dr. Matney, overcrowding is a risk, but a greater risk comes from uncontrollable dead satellites. While these satellites may have advanced and sometimes automated collision avoidance algorithms, the sheer number of them raise the risk of technical failures or collision with untracked debris. (CITE?) Recently, several starlink satellites suffered as-of-yet unexplained explosions, including Starlink 34343 on March 29, 2026. (CITE). While small in number, these incidents demonstrate the inevitable risk of malfunctions present at industrial scale.</p>
 			<p class="indent">Using data gathered from CelesTrak around early March and CesiumJS, this map has been created to visualize the current orbital environment of satellites. By default, it tracks around 1000 satellites over the course of 90 minutes. While only one fifteenth of the total number of active satellites currently in orbit, it demonstrates the various layers of orbits as well as the vast number of active satellites.</p>
-			<p class="indent">&lt;MAP&gt;</p>
+			<!-- Interactive map moved here -->
+			<div id="embeddedCesiumSection">
+				<div id="embeddedCesiumHeader">
+					<h2>Interactive Satellite Map</h2>
+					<p style="margin: 0.5rem 0 0 0; font-size: 0.9rem; color: #666;">Explore the current satellite catalog in 3D. Use the controls on the left to filter by satellite type and visualization parameters.</p>
+				</div>
+
+				<div id="embeddedControlPanel">
+					<div class="panel-header">
+						<h1>Satellite Catalog View</h1>
+						<button id="panelToggleBtn" type="button" aria-expanded="true" aria-controls="panelContent">Minimize</button>
+					</div>
+
+					<div id="panelContent">
+						<p>
+							Loads local JSON orbital elements, converts them into CZML samples with
+							satellite.js, then renders the selected group in one Cesium CZML data source.
+						</p>
+
+						<div class="controls">
+							<div>
+								<label for="datasetSelect">Dataset preset</label>
+								<select id="datasetSelect" aria-label="Dataset preset selector">
+									<option value="CURRENT">Current catalog (all launch years)</option>
+									<option value="PRE_1970">Launch-era view: 1960s and earlier</option>
+									<option value="PRE_1980">Launch-era view: through 1979</option>
+									<option value="PRE_2000">Launch-era view: through 1999</option>
+									<option value="RANGE_2000_2010">Modern launch-era view: 2000-2010</option>
+									<option value="POST_2010">Modern launch-era view: 2010-present</option>
+								</select>
+							</div>
+							<div>
+								<label for="globeStyleSelect">Globe style</label>
+								<select id="globeStyleSelect" aria-label="Globe style selector">
+									<option value="SATELLITE">Satellite imagery</option>
+									<option value="STREETS">Street map</option>
+									<option value="DARK">Dark no-basemap</option>
+								</select>
+							</div>
+						</div>
+
+						<div class="controls">
+							<div>
+								<label for="maxCount">Max satellites</label>
+								<input id="maxCount" type="number" min="10" max="5000" step="10" value="500">
+							</div>
+							<div>
+								<label for="stepSeconds">Sample step (sec)</label>
+								<input id="stepSeconds" type="number" min="10" max="300" step="10" value="60">
+							</div>
+							<div>
+								<label for="durationMinutes">Duration (min)</label>
+								<input id="durationMinutes" type="number" min="20" max="43200" step="10" value="90">
+							</div>
+							<div>
+								<label for="trailSeconds">Orbit trail (sec)</label>
+								<input id="trailSeconds" type="number" min="60" max="21600" step="60" value="5400">
+							</div>
+						</div>
+
+						<label for="groupSelect" style="display:block;font-size:0.78rem;margin-bottom:3px;color:#bfdbfe;">Display Group</label>
+						<select id="groupSelect" aria-label="Display group selector"></select>
+
+						<div id="multiGroupSection">
+							<label class="toggle-row" for="multiGroupMode">
+								<input id="multiGroupMode" type="checkbox">
+								Enable multi-group mode
+							</label>
+							<label for="multiGroupSelect" style="display:block;font-size:0.78rem;margin-bottom:3px;color:#bfdbfe;">Choose multiple groups (Ctrl/Cmd+click)</label>
+							<select id="multiGroupSelect" aria-label="Multiple group selector" multiple></select>
+							<div class="controls" style="margin-bottom:6px;">
+								<div>
+									<label for="perGroupCount">Per-group max count</label>
+									<input id="perGroupCount" type="number" min="1" max="5000" step="1" value="100">
+								</div>
+								<div>
+									<label for="colorByGroup">Color by group</label>
+									<input id="colorByGroup" type="checkbox" checked>
+								</div>
+							</div>
+						</div>
+
+						<label class="toggle-row" for="enduranceMode">
+							<input id="enduranceMode" type="checkbox">
+							Endurance mode (maximize satellites across groups for long runs)
+						</label>
+
+						<button id="loadBtn" type="button">Visualize Sattelites</button>
+						<div id="groupNote"></div>
+						<div id="sourceNote"></div>
+						<div id="datasetIndicator"></div>
+						<div id="status">Waiting to load local satellite JSON data...</div>
+					</div>
+				</div>
+
+				<div id="embeddedCesiumContainer"></div>
+			</div>
 			<p class="indent">When discussing various orbital altitudes at risk for debris, Dr. Matney breaks down the distinctions well:</p>
 			<blockquote class="quote">
 				The first key to understand is the lifetime of an object due to atmospheric drag is a function of orbit altitude. At ISS altitude (400 km), the lifetime of a satellite is months to years. Up at HST altitudes (600 km), it is decades. Around 800 km, it is more like centuries. Above 1000 km, natural lifetimes are essentially infinite by human standards (thousands of years or more). People tend to launch satellites where drag is small, so ~800 km and above. So there are lots of objects, both active and dead, at those high altitudes. There have been lots of explosions there, plus collisions, so it is the most congested region. Energetic breakups - collisions and explosions - mostly affect the immediate altitude, but spread debris all around. By the way, I am keeping this simple for convenience. I am talking about circular orbits. There are highly elliptical orbits that have many complicating factors, but right now near-circular orbits dominate the risk. (Matney).
@@ -321,108 +264,21 @@
 			</blockquote>
 			<p>One major recent change is the implementation of the 5-year rule, an international recommendation to limit the life of a satellite to five years after its mission is complete. As this is a recommendation and not a binding international treaty, space agencies are not forced to follow this rule. (CITE).</p>
 			<p>Several companies and organizations have designed and proposed various solutions to removing orbital debris, ranging from satellites with claws to ground based lasers to push debris around. However, none of these proposals have been tested in orbit yet, so the feasibility of these systems is currently unknown. With the advent of megaconstellations, there has been increased interest in the field, but most projects remain in their infancy. (CITE)</p>
+			</section>
+		  </article>
+
+		  <aside class="right-column" aria-label="navigation and context">
+
+			<section class="card" aria-label="notes">
+			  <h3 class="label">Page Note</h3>
+			  <p class="caption">This page presents interpreted visualizations and an interactive Cesium map below.</p>
+			</section>
+		  </aside>
 		</section>
-		</section>
 
-		<div id="embeddedCesiumSection">
-			<div id="embeddedCesiumHeader">
-				<h2>Interactive Satellite Map</h2>
-				<p style="margin: 0.5rem 0 0 0; font-size: 0.9rem; color: #666;">Explore the current satellite catalog in 3D. Use the controls on the left to filter by satellite type and visualization parameters.</p>
-			</div>
+		<!-- Original embedded Cesium section moved earlier into the article content -->
 
-			<div id="embeddedControlPanel">
-				<div class="panel-header">
-					<h1>Satellite Catalog View</h1>
-					<button id="panelToggleBtn" type="button" aria-expanded="true" aria-controls="panelContent">Minimize</button>
-				</div>
-
-				<div id="panelContent">
-					<p>
-						Loads local JSON orbital elements, converts them into CZML samples with
-						satellite.js, then renders the selected group in one Cesium CZML data source.
-					</p>
-
-					<div class="controls">
-						<div>
-							<label for="datasetSelect">Dataset preset</label>
-							<select id="datasetSelect" aria-label="Dataset preset selector">
-								<option value="CURRENT">Current catalog (all launch years)</option>
-								<option value="PRE_1970">Launch-era view: 1960s and earlier</option>
-								<option value="PRE_1980">Launch-era view: through 1979</option>
-								<option value="PRE_2000">Launch-era view: through 1999</option>
-								<option value="RANGE_2000_2010">Modern launch-era view: 2000-2010</option>
-								<option value="POST_2010">Modern launch-era view: 2010-present</option>
-							</select>
-						</div>
-						<div>
-							<label for="globeStyleSelect">Globe style</label>
-							<select id="globeStyleSelect" aria-label="Globe style selector">
-								<option value="SATELLITE">Satellite imagery</option>
-								<option value="STREETS">Street map</option>
-								<option value="DARK">Dark no-basemap</option>
-							</select>
-						</div>
-					</div>
-
-					<div class="controls">
-						<div>
-							<label for="maxCount">Max satellites</label>
-							<input id="maxCount" type="number" min="10" max="5000" step="10" value="500">
-						</div>
-						<div>
-							<label for="stepSeconds">Sample step (sec)</label>
-							<input id="stepSeconds" type="number" min="10" max="300" step="10" value="60">
-						</div>
-						<div>
-							<label for="durationMinutes">Duration (min)</label>
-							<input id="durationMinutes" type="number" min="20" max="43200" step="10" value="90">
-						</div>
-						<div>
-							<label for="trailSeconds">Orbit trail (sec)</label>
-							<input id="trailSeconds" type="number" min="60" max="21600" step="60" value="5400">
-						</div>
-					</div>
-
-					<label for="groupSelect" style="display:block;font-size:0.78rem;margin-bottom:3px;color:#bfdbfe;">Display Group</label>
-					<select id="groupSelect" aria-label="Display group selector"></select>
-
-					<div id="multiGroupSection">
-						<label class="toggle-row" for="multiGroupMode">
-							<input id="multiGroupMode" type="checkbox">
-							Enable multi-group mode
-						</label>
-						<label for="multiGroupSelect" style="display:block;font-size:0.78rem;margin-bottom:3px;color:#bfdbfe;">Choose multiple groups (Ctrl/Cmd+click)</label>
-						<select id="multiGroupSelect" aria-label="Multiple group selector" multiple></select>
-						<div class="controls" style="margin-bottom:6px;">
-							<div>
-								<label for="perGroupCount">Per-group max count</label>
-								<input id="perGroupCount" type="number" min="1" max="5000" step="1" value="100">
-							</div>
-							<div>
-								<label for="colorByGroup">Color by group</label>
-								<input id="colorByGroup" type="checkbox" checked>
-							</div>
-						</div>
-					</div>
-
-					<label class="toggle-row" for="enduranceMode">
-						<input id="enduranceMode" type="checkbox">
-						Endurance mode (maximize satellites across groups for long runs)
-					</label>
-
-					<button id="loadBtn" type="button">Visualize Sattelites</button>
-					<div id="groupNote"></div>
-					<div id="sourceNote"></div>
-					<div id="datasetIndicator"></div>
-					<div id="status">Waiting to load local satellite JSON data...</div>
-				</div>
-			</div>
-
-			<div id="embeddedCesiumContainer"></div>
-		</div>
-
-		
-			<script type="module">
+		<script type="module">
 				const controlPanel = document.getElementById('embeddedControlPanel');
 				const panelToggleBtn = document.getElementById('panelToggleBtn');
 				const ION_TOKEN_FILE_PATH = './.token';
