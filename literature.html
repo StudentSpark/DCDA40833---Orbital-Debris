@@ -4,111 +4,109 @@
 	<meta charset="utf-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1">
 	<title>Literature | Orbital Debris Research</title>
+	<link rel="preconnect" href="https://fonts.googleapis.com">
+	<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+	<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@500;700;800&family=Rajdhani:wght@500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
 	<style>
-		body {
-			margin: 0;
-			font-family: Arial, sans-serif;
-			line-height: 1.5;
-			background: #f4f6f8;
-			color: #17212b;
-		}
-
-		main {
-			max-width: 900px;
-			margin: 0 auto;
-			padding: 1rem;
-		}
-
-		nav {
-			display: flex;
-			flex-wrap: wrap;
-			gap: 0.5rem;
-			margin-bottom: 1rem;
-		}
-
-		nav a {
-			text-decoration: none;
-			padding: 0.35rem 0.6rem;
-			border: 1px solid #b8c4cf;
-			border-radius: 6px;
-			color: #17212b;
-			background: #fff;
-			font-size: 0.9rem;
-		}
-
-		section {
-			background: #fff;
-			border: 1px solid #d5dde5;
-			border-radius: 8px;
-			padding: 0.8rem;
-			margin-bottom: 0.8rem;
-		}
-
-		h1, h2 {
-			margin-top: 0;
-		}
-
-		.placeholder {
-			color: #5c6f82;
-			font-style: italic;
-		}
-
-		.note {
-			background: #eef4fa;
-			border: 1px solid #c6d8ea;
-			border-radius: 8px;
-			padding: 0.65rem;
-			margin-bottom: 0.8rem;
-		}
+		:root { --bg-a:#0f1c2d; --bg-b:#162843; --bg-c:#26435c; --panel:rgba(10,21,35,0.78); --panel-soft:rgba(16,31,51,0.66); --line:rgba(122,224,255,0.3); --line-strong:rgba(122,224,255,0.65); --text:#ecf6ff; --text-soft:#b7cee5; --accent:#7ae0ff; --shadow:0 24px 55px rgba(2,10,18,0.42); }
+		* { box-sizing:border-box; }
+		html, body { margin:0; min-height:100%; color:var(--text); font-family:"Rajdhani", "Segoe UI", sans-serif; background: linear-gradient(140deg, var(--bg-a) 0%, var(--bg-b) 45%, var(--bg-c) 100%); overflow-x:hidden; }
+		body::before { content:""; position:fixed; inset:0; pointer-events:none; background-image: linear-gradient(rgba(127,205,242,0.05) 1px, transparent 1px), linear-gradient(90deg, rgba(127,205,242,0.05) 1px, transparent 1px); background-size:28px 28px; mix-blend-mode:screen; z-index:0; }
+		.deck { position:relative; z-index:1; width:min(1240px, calc(100% - 1.6rem)); margin:1rem auto; padding:1rem; border-radius:24px; border:1px solid var(--line); background: linear-gradient(155deg, rgba(5,14,24,0.84), rgba(13,29,47,0.74)); box-shadow:var(--shadow); backdrop-filter: blur(4px); }
+		.topbar { display:grid; grid-template-columns: 1fr auto; gap:1rem; align-items:center; border:1px solid var(--line); border-radius:16px; padding:0.85rem 1rem; background: linear-gradient(180deg, rgba(18,41,64,0.7), rgba(8,20,35,0.72)); }
+		.tagline { display:flex; align-items:center; gap:0.8rem; min-width:0; }
+		.beacon { width:14px; height:14px; border-radius:50%; background:var(--accent); box-shadow:0 0 0 0 rgba(122,224,255,0.7); animation: ping 2.1s infinite; flex-shrink:0; }
+		.label { margin:0; font-family:"IBM Plex Mono", monospace; font-size:0.73rem; letter-spacing:0.17em; text-transform:uppercase; color:var(--text-soft); }
+		.title { margin:0.15rem 0 0; font-family:"Orbitron", sans-serif; font-size:clamp(1rem,2.2vw,1.45rem); letter-spacing:0.05em; text-transform:uppercase; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+		.top-links { display:flex; flex-wrap:wrap; gap:0.45rem; justify-content:flex-end; }
+		.top-links a { text-decoration:none; color:var(--text); border:1px solid rgba(122,224,255,0.4); border-radius:999px; padding:0.35rem 0.6rem; font-family:"IBM Plex Mono", monospace; font-size:0.68rem; text-transform:uppercase; letter-spacing:0.08em; background:rgba(8,21,35,0.88); }
+		.main-grid { margin-top:0.95rem; display:grid; grid-template-columns: 1.5fr 0.9fr; gap:0.9rem; }
+		.card { border:1px solid var(--line); border-radius:16px; background: linear-gradient(180deg, var(--panel), var(--panel-soft)); padding:1rem; position:relative; overflow:hidden; }
+		.lead { color:#e7f2ff; font-size:1.02rem; line-height:1.55; }
+		.note { background:rgba(7,19,32,0.7); border:1px solid rgba(122,224,255,0.28); border-radius:12px; padding:0.8rem 0.9rem; }
+		.note strong { color:var(--accent); }
+		.link-grid { margin-top:0.68rem; display:grid; gap:0.55rem; }
+		.link-grid a { text-decoration:none; color:var(--text); border:1px solid rgba(122,224,255,0.4); border-radius:12px; background: linear-gradient(180deg, rgba(14,37,58,0.82), rgba(8,21,35,0.88)); padding:0.72rem 0.8rem; text-transform:uppercase; font-family:"Orbitron", sans-serif; font-size:0.8rem; display:flex; justify-content:space-between; align-items:center; }
+		.link-grid a::after { content:"->"; color:var(--accent); font-family:"IBM Plex Mono", monospace; font-size:0.78rem; }
+		.right-column { display:grid; gap:0.9rem; }
+		.caption { margin:0; border-top:1px dashed rgba(122,224,255,0.3); padding-top:0.8rem; color:#c7ddf0; font-family:"IBM Plex Mono", monospace; font-size:0.77rem; line-height:1.5; letter-spacing:0.03em; }
+		@keyframes ping { 0% { box-shadow:0 0 0 0 rgba(122,224,255,0.65);} 70% { box-shadow:0 0 0 14px rgba(122,224,255,0);} 100% { box-shadow:0 0 0 0 rgba(122,224,255,0);} }
+		@media (max-width:980px) { .main-grid { grid-template-columns:1fr; } .topbar { grid-template-columns:1fr; } .top-links { justify-content:flex-start; } }
 	</style>
 </head>
 <body>
-	<main>
-		<nav aria-label="Page navigation">
-			<a href="intro.html">Intro</a>
-			<a href="methods.html">Methods</a>
-			<a href="literature.html">Literature</a>
-			<a href="findings.html">Findings</a>
-			<a href="conclusion.html">Conclusion</a>
-			<a href="works-cited.html">Works Cited</a>
-			<a href="SpaceMap.html">SpaceMap</a>
-		</nav>
+	<main class="deck">
+		<header class="topbar" aria-label="Control deck status header">
+			<div class="tagline">
+				<span class="beacon" aria-hidden="true"></span>
+				<div>
+					<p class="label">Orbital Traffic Research Deck</p>
+					<p class="title">Literature Review</p>
+				</div>
+			</div>
+			<nav class="top-links" aria-label="Research navigation">
+				<a href="index.html">Intro</a>
+				<a href="methods.html">Methods</a>
+				<a href="findings.html">Findings</a>
+				<a href="conclusion.html">Conclusion</a>
+				<a href="works-cited.html">Works Cited</a>
+			</nav>
+		</header>
 
-		<h1>Literature Review</h1>
-		<p class="placeholder">Draft space to summarize and synthesize scholarship related to your research question.</p>
-		<div class="note">
-			<strong>Rubric target:</strong> This is a critical review of relevant studies, not general background or personal interest.
-		</div>
+		<section class="main-grid" aria-label="Literature content">
+			<article class="card" aria-labelledby="literature-title">
+				<h1 id="literature-title">Literature Review</h1>
+				<p class="lead">Draft space to summarize and synthesize scholarship related to your research question.</p>
+				<div class="note">
+					<strong>Rubric target:</strong> This is a critical review of relevant studies, not general background or personal interest.
+				</div>
 
-		<section>
-			<h2>Intro</h2>
-			<p>Despite its common depictions as an infinite void (which it is), space near Earth is not near as big, and is in fact growing much more crowded.
+				<section>
+					<h2>Intro</h2>
+					<p>Despite its common depictions as an infinite void (which it is), space near Earth is not near as big, and is in fact growing much more crowded.
 Due to the nature of orbits and physics, satellites can easily stay in orbit for decades or even centuries. This is great for operators, as it allows for the relatively easy management of these high-cost assets, with the lifespan of satellites often defined by the integrity of their components and compatibility with ground based assets. While this is great for satellites, it applies to all sorts of objects in space, including dead satellites and debris. 
 	The lifespan for objects in orbit is largely based upon its altitude from Earth. To break it down simply, objects around 400km (ISS altitude) have a lifespan from months to years. At 600km (Hubble Space Telescope altitude) it has a lifespan measured in decades. At 800km, they can last centuries. Above 1000km, objects can last millenia. When dead satellites or debris are left in these orbital altitudes, they become fast moving, long lasting hazards to other objects operating on that altitude. Accentuating that risk is the debris generated by impacts or internal explosions of dead satellites, causing slow moving chain reactions where debris creates more debris and so on. This chain reaction is known as Kessler Syndrome, and is a looming threat for the future of spaceflight.
 </p>
-		</section>
+				</section>
 
-		<section>
-			<h2>History</h2>
-			<h3>Early History</h3>
-			<p>The first satellite, Sputnik, was launched by the Soviet Union in 1952, sparking the Space Race between the United States and the Soviet Union. Many launches soon followed afterwards, with each side competing to outdo the other. This culminated in 1969 when the US landed the first humans on the moon in 1969 with Apollo 11. This era of spaceflight was characterized by rapid launches and discoveries, but a comparatively primitive knowledge of space compared to today. (CITE)</p>
-			<h3>Kessler Syndrome</h3>
-			<p>In 1978, Dr. Kessler and Dr Cour-Palais published the paper “Collision Frequency of Artificial Satellites: The Creation of a Debris Belt,” introducing to the world the risk of orbital debris. This seminal paper forever changed the world of spaceflight, bringing the need to dispose of old boosters and satellites, predicting the risk of “conjunction events” of satellites maneuvering to avoid each other and debris, and the origin of the “Kessler Syndrome,” the cascading effect of space debris generating exponentially more space debris. The paper proposed several solutions to minimize the risk of a debris field, including the deorbiting of boosters, the implementation of strict launch and disposal protocols, and the redesign of satellites to minimize the risk of internal explosions (a major source of debris from early space travel). Several of these recommendations have been implemented, but the number of orbital debris continues to grow. (CITE)</p>
-			<h3>2000s History</h3>
-			<p>The 2000s saw several significant events for the orbital environment. With a “mere” 739 active satellite payloads in orbit (CITE), space was a lot less busy, but far from empty. In January of 2007, China tested an anti-satellite missile (ASAT) on one of their FENGYUN 1C weather satellites. The debris field created by this event was the largest of its time, creating 3,312 trackable pieces, with an estimated 150,000 pieces larger than 1cm. Within a month, the ISS was forced to maneuver away from a piece of debris resulting from this explosion. (CITE). A few years later in 2009, a defunct Russian communications satellite Cosmos 2251 collided with the active Iridium 33 satellite (part of the American Iridium satellite phone constellation). This marked the first incident where two satellites had collided with each other. (CITE) The decade closed with 999 active satellites in orbit. (CITE). ]</p>
-			<h3>Current History</h3>
-			<p>Fast forward to today, there are currently 15,439 active satellites in orbit. Of these, approximately 10,000 are SpaceX’s Starlink mega constellation. These satellites are small communications satellites designed to fly in low orbits around 500 kilometers. Deployed in record breaking numbers, Starlink is the first “megaconstellation” of satellites. 
+				<section>
+					<h2>History</h2>
+					<h3>Early History</h3>
+					<p>The first satellite, Sputnik, was launched by the Soviet Union in 1952, sparking the Space Race between the United States and the Soviet Union. Many launches soon followed afterwards, with each side competing to outdo the other. This culminated in 1969 when the US landed the first humans on the moon in 1969 with Apollo 11. This era of spaceflight was characterized by rapid launches and discoveries, but a comparatively primitive knowledge of space compared to today. (CITE)</p>
+					<h3>Kessler Syndrome</h3>
+					<p>In 1978, Dr. Kessler and Dr Cour-Palais published the paper “Collision Frequency of Artificial Satellites: The Creation of a Debris Belt,” introducing to the world the risk of orbital debris. This seminal paper forever changed the world of spaceflight, bringing the need to dispose of old boosters and satellites, predicting the risk of “conjunction events” of satellites maneuvering to avoid each other and debris, and the origin of the “Kessler Syndrome,” the cascading effect of space debris generating exponentially more space debris. The paper proposed several solutions to minimize the risk of a debris field, including the deorbiting of boosters, the implementation of strict launch and disposal protocols, and the redesign of satellites to minimize the risk of internal explosions (a major source of debris from early space travel). Several of these recommendations have been implemented, but the number of orbital debris continues to grow. (CITE)</p>
+					<h3>2000s History</h3>
+					<p>The 2000s saw several significant events for the orbital environment. With a “mere” 739 active satellite payloads in orbit (CITE), space was a lot less busy, but far from empty. In January of 2007, China tested an anti-satellite missile (ASAT) on one of their FENGYUN 1C weather satellites. The debris field created by this event was the largest of its time, creating 3,312 trackable pieces, with an estimated 150,000 pieces larger than 1cm. Within a month, the ISS was forced to maneuver away from a piece of debris resulting from this explosion. (CITE). A few years later in 2009, a defunct Russian communications satellite Cosmos 2251 collided with the active Iridium 33 satellite (part of the American Iridium satellite phone constellation). This marked the first incident where two satellites had collided with each other. (CITE) The decade closed with 999 active satellites in orbit. (CITE). ]</p>
+					<h3>Current History</h3>
+					<p>Fast forward to today, there are currently 15,439 active satellites in orbit. Of these, approximately 10,000 are SpaceX’s Starlink mega constellation. These satellites are small communications satellites designed to fly in low orbits around 500 kilometers. Deployed in record breaking numbers, Starlink is the first “megaconstellation” of satellites. 
 </p>
-			<h3>Future</h3>
-			<p>Fast forward to today, there are currently 15,439 active satellites in orbit. Of these, approximately 10,000 are SpaceX’s Starlink mega constellation. These satellites are small communications satellites designed to fly in low orbits around 500 kilometers. Deployed in record breaking numbers, Starlink is the first “megaconstellation” of satellites. 
+					<h3>Future</h3>
+					<p>Fast forward to today, there are currently 15,439 active satellites in orbit. Of these, approximately 10,000 are SpaceX’s Starlink mega constellation. These satellites are small communications satellites designed to fly in low orbits around 500 kilometers. Deployed in record breaking numbers, Starlink is the first “megaconstellation” of satellites. 
 </p>
-		</section>
+				</section>
 
-		<section>
-			<h2>Current Status</h2>
-			<p>As it stands, there is no way to actively remove debris from orbit. Currently, the only method is to wait for its orbit to naturally decay, and to plot around it when planning missions. Satellites and space stations maneuver to avoid collision with other satellites or debris. The ISS has to make yearly maneuvers to avoid collision with sizable debris, while smaller debris damages the exterior of stations and leaves holes in solar arrays. (CITE). Much like climate change, the current levels  of debris are manageable, but unabated growth will lead to disastrous consequences in the future.
+				<section>
+					<h2>Current Status</h2>
+					<p>As it stands, there is no way to actively remove debris from orbit. Currently, the only method is to wait for its orbit to naturally decay, and to plot around it when planning missions. Satellites and space stations maneuver to avoid collision with other satellites or debris. The ISS has to make yearly maneuvers to avoid collision with sizable debris, while smaller debris damages the exterior of stations and leaves holes in solar arrays. (CITE). Much like climate change, the current levels  of debris are manageable, but unabated growth will lead to disastrous consequences in the future.
 
 </p>
+				</section>
+			</article>
+
+			<aside class="right-column" aria-label="navigation and context">
+				<section class="card" aria-label="notes">
+					<h3 class="label">Page Note</h3>
+					<p class="caption">This page synthesizes the sources behind the project and frames the historical context.</p>
+				</section>
+				<nav class="card" aria-label="Quick links">
+					<h3 class="label">Quick Links</h3>
+					<div class="link-grid">
+						<a href="methods.html">Methods</a>
+						<a href="findings.html">Findings</a>
+						<a href="conclusion.html">Conclusion</a>
+					</div>
+				</nav>
+			</aside>
 		</section>
 	</main>
 </body>
