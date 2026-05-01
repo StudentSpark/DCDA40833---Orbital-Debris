@@ -20,6 +20,7 @@
 		.title { margin:0.15rem 0 0; font-family:"Orbitron", sans-serif; font-size:clamp(1rem,2.2vw,1.45rem); letter-spacing:0.05em; text-transform:uppercase; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
 		.top-links { display:flex; flex-wrap:wrap; gap:0.45rem; justify-content:flex-end; }
 		.top-links a { text-decoration:none; color:var(--text); border:1px solid rgba(122,224,255,0.4); border-radius:999px; padding:0.35rem 0.6rem; font-family:"IBM Plex Mono", monospace; font-size:0.68rem; text-transform:uppercase; letter-spacing:0.08em; background:rgba(8,21,35,0.88); }
+		.top-links a[aria-current="page"] { color:#07131f; border-color:rgba(122,224,255,0.95); background:linear-gradient(180deg, rgba(122,224,255,0.98), rgba(122,224,255,0.72)); box-shadow:0 0 0 1px rgba(122,224,255,0.25), 0 10px 20px rgba(8,24,36,0.28); }
 		.main-grid { margin-top:0.95rem; display:grid; grid-template-columns: 1.5fr 0.9fr; gap:0.9rem; }
 		.card { border:1px solid var(--line); border-radius:16px; background: linear-gradient(180deg, var(--panel), var(--panel-soft)); padding:1rem; position:relative; overflow:hidden; }
 		.lead { color:#e7f2ff; font-size:1.02rem; line-height:1.55; }
@@ -46,8 +47,9 @@
 			</div>
 			<nav class="top-links" aria-label="Research navigation">
 				<a href="index.html">Intro</a>
-				<a href="methods.html">Methods</a>
 				<a href="findings.html">Findings</a>
+				<a href="methods.html">Methods</a>
+				<a href="literature.html" aria-current="page">Literature</a>
 				<a href="conclusion.html">Conclusion</a>
 				<a href="works-cited.html">Works Cited</a>
 			</nav>
@@ -99,14 +101,6 @@ Due to the nature of orbits and physics, satellites can easily stay in orbit for
 					<h3 class="label">Page Note</h3>
 					<p class="caption">This page synthesizes the sources behind the project and frames the historical context.</p>
 				</section>
-				<nav class="card" aria-label="Quick links">
-					<h3 class="label">Quick Links</h3>
-					<div class="link-grid">
-						<a href="methods.html">Methods</a>
-						<a href="findings.html">Findings</a>
-						<a href="conclusion.html">Conclusion</a>
-					</div>
-				</nav>
 			</aside>
 		</section>
 	</main>

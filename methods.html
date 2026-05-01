@@ -20,6 +20,7 @@
 		.title { margin:0.15rem 0 0; font-family:"Orbitron", sans-serif; font-size:clamp(1rem,2.2vw,1.45rem); letter-spacing:0.05em; text-transform:uppercase; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
 		.top-links { display:flex; flex-wrap:wrap; gap:0.45rem; justify-content:flex-end; }
 		.top-links a { text-decoration:none; color:var(--text); border:1px solid rgba(122,224,255,0.4); border-radius:999px; padding:0.35rem 0.6rem; font-family:"IBM Plex Mono", monospace; font-size:0.68rem; text-transform:uppercase; letter-spacing:0.08em; background:rgba(8,21,35,0.88); }
+		.top-links a[aria-current="page"] { color:#07131f; border-color:rgba(122,224,255,0.95); background:linear-gradient(180deg, rgba(122,224,255,0.98), rgba(122,224,255,0.72)); box-shadow:0 0 0 1px rgba(122,224,255,0.25), 0 10px 20px rgba(8,24,36,0.28); }
 		.main-grid { margin-top:0.95rem; display:grid; grid-template-columns: 1.5fr 0.9fr; gap:0.9rem; }
 		.card { border:1px solid var(--line); border-radius:16px; background: linear-gradient(180deg, var(--panel), var(--panel-soft)); padding:1rem; position:relative; overflow:hidden; }
 		.lead { color:#e7f2ff; font-size:1.02rem; line-height:1.55; }
@@ -31,6 +32,13 @@
 		.right-column { display:grid; gap:0.9rem; }
 		.indent { margin-left:1.5rem; }
 		.caption { margin:0; border-top:1px dashed rgba(122,224,255,0.3); padding-top:0.8rem; color:#c7ddf0; font-family:"IBM Plex Mono", monospace; font-size:0.77rem; line-height:1.5; letter-spacing:0.03em; }
+			/* Data snippet styling for methods sidebar */
+			.data-snippets { display:grid; grid-template-columns:1fr; gap:0.6rem; justify-items:center; }
+			.data-snippets figure { margin:0; display:flex; flex-direction:column; gap:0.45rem; align-items:center; width:100%; }
+			.snippet-thumb, .snippet-full { width:100%; max-width:560px; height:auto; object-fit:contain; display:block; margin:0 auto; border-radius:10px; border:1px solid rgba(122,224,255,0.12); box-shadow:0 8px 24px rgba(2,10,18,0.20); }
+			.snippet-full { max-height:420px; }
+			.snippet-caption { margin:0; color:var(--text); font-family:"IBM Plex Mono", monospace; font-size:0.78rem; text-align:center; padding:0.35rem 0.5rem; background: linear-gradient(180deg, rgba(255,255,255,0.02), rgba(0,0,0,0.02)); border-radius:8px; width:100%; max-width:520px; }
+			@media (min-width:720px) { .data-snippets { grid-template-columns:1fr 1fr; } .snippet-large { grid-column:1 / -1; } }
 		@keyframes ping { 0% { box-shadow:0 0 0 0 rgba(122,224,255,0.65);} 70% { box-shadow:0 0 0 14px rgba(122,224,255,0);} 100% { box-shadow:0 0 0 0 rgba(122,224,255,0);} }
 		@media (max-width:980px) { .main-grid { grid-template-columns:1fr; } .topbar { grid-template-columns:1fr; } .top-links { justify-content:flex-start; } }
 	</style>
@@ -47,8 +55,9 @@
 			</div>
 			<nav class="top-links" aria-label="Research navigation">
 				<a href="index.html">Intro</a>
-				<a href="literature.html">Literature</a>
 				<a href="findings.html">Findings</a>
+				<a href="methods.html" aria-current="page">Methods</a>
+				<a href="literature.html">Literature</a>
 				<a href="conclusion.html">Conclusion</a>
 				<a href="works-cited.html">Works Cited</a>
 			</nav>
@@ -58,9 +67,7 @@
 			<article class="card" aria-labelledby="methods-title">
 				<h1 id="methods-title">Research Methodology</h1>
 				<p class="lead">Draft space to explain exactly how your project answers your research question.</p>
-				<div class="note">
-					<strong>Rubric target:</strong> Be specific and step-by-step about data collection, management, analysis, and project scope decisions.
-				</div>
+			
 
 				<section>
 					<h2>Methodology</h2>
@@ -81,12 +88,19 @@
 					<p class="caption">This page explains the workflow behind the maps, research sources, and scope decisions.</p>
 				</section>
 				<nav class="card" aria-label="Quick links">
-					<h3 class="label">Quick Links</h3>
-					<div class="link-grid">
-						<a href="literature.html">Literature</a>
-						<a href="findings.html">Findings</a>
-						<a href="conclusion.html">Conclusion</a>
-					</div>
+					<h3 class="label">Data Snippets</h3>
+						<div class="data-snippets">
+							<figure class="snippet-row">
+								<img src="Images/CelesTrakSample.jpg" alt="Sample of CelesTrak data" class="snippet-thumb">
+								<figcaption class="snippet-caption">CelesTrak extract (JSON sample)</figcaption>
+							</figure>
+
+							<figure class="snippet-large">
+								<img src="Images/SpaceDataSample.jpg" alt="Sample of processed space data" class="snippet-full">
+								<figcaption class="snippet-caption">Processed dataset preview</figcaption>
+							</figure>
+						</div>
+					
 				</nav>
 			</aside>
 		</section>
