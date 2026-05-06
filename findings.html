@@ -98,6 +98,19 @@
 	.gauge span { display:block; height:100%; width:72%; background: linear-gradient(90deg,#ffd069 0%,#ff8f66 62%,#ff6d6d 100%); box-shadow:0 0 18px rgba(255,143,102,0.4); animation: expand 1.2s ease-out; }
 	.meter-note { margin:0.65rem 0 0; color:#ffd8cc; line-height:1.45; font-size:0.98rem; }
 	.caption { margin-top:0.95rem; border-top:1px dashed rgba(122,224,255,0.3); padding-top:0.8rem; color:#c7ddf0; font-family: "IBM Plex Mono", monospace; font-size:0.77rem; line-height:1.5; letter-spacing:0.03em; }
+	.sidebar-image-wrap { margin-top:0.8rem; text-align:center; }
+	.snippet-trigger { appearance:none; border:0; padding:0; background:none; cursor:zoom-in; width:100%; max-width:560px; }
+	.snippet-trigger:focus-visible { outline:2px solid var(--accent); outline-offset:4px; border-radius:10px; }
+	.snippet-thumb { width:100%; max-width:560px; height:auto; object-fit:contain; display:block; margin:0 auto; border-radius:10px; border:1px solid rgba(122,224,255,0.12); box-shadow:0 8px 24px rgba(2,10,18,0.20); }
+	.sidebar-subtext { margin:0.45rem auto 0; max-width:320px; font-size:0.78rem; color:#a8c2da; line-height:1.4; }
+	.image-modal { border:none; padding:0; background:transparent; width:min(92vw, 1100px); }
+	.image-modal::backdrop { background:rgba(2,10,18,0.82); backdrop-filter: blur(6px); }
+	.image-modal .modal-shell { display:grid; gap:0.65rem; padding:0.9rem; border:1px solid rgba(122,224,255,0.25); border-radius:16px; background:linear-gradient(180deg, rgba(8,20,35,0.96), rgba(5,14,24,0.98)); box-shadow:0 28px 70px rgba(0,0,0,0.55); }
+	.image-modal img { width:100%; height:auto; max-height:80vh; object-fit:contain; border-radius:12px; border:1px solid rgba(122,224,255,0.18); }
+	.image-modal .modal-meta { display:flex; justify-content:space-between; gap:1rem; align-items:center; flex-wrap:wrap; }
+	.image-modal .modal-title { margin:0; font-family:"Orbitron", sans-serif; font-size:0.9rem; letter-spacing:0.08em; text-transform:uppercase; color:var(--accent); }
+	.image-modal .modal-close { border:1px solid rgba(122,224,255,0.35); border-radius:999px; padding:0.45rem 0.8rem; font:inherit; color:var(--text); background:rgba(8,21,35,0.88); cursor:pointer; }
+	.image-modal .modal-close:hover, .image-modal .modal-close:focus-visible { border-color:rgba(122,224,255,0.95); box-shadow:0 0 0 1px rgba(122,224,255,0.25); }
 
 	@keyframes sweep { from { width: 0; } to { width: 100%; } }
 	@keyframes expand { from { width: 0; } to { width: 72%; } }
@@ -115,9 +128,9 @@
 			</div>
 			<nav class="top-links" aria-label="Research navigation">
 				<a href="index.html">Intro</a>
-				<a href="findings.html" aria-current="page">Findings</a>
-				<a href="methods.html">Methods</a>
 				<a href="literature.html">Literature</a>
+				<a href="methods.html">Methods</a>
+				<a href="findings.html" aria-current="page">Findings</a>
 				<a href="conclusion.html">Conclusion</a>
 				<a href="works-cited.html">Works Cited</a>
 			</nav>
@@ -164,10 +177,10 @@
 					<p style="margin: 0.5rem 0 0 0; font-size: 0.9rem; color: #666;">Explore the current satellite catalog in 3D. Use the controls on the left to filter by satellite type and visualization parameters.</p>
 				</div>
 
-				<div id="embeddedControlPanel">
+				<div id="embeddedControlPanel" class="collapsed">
 					<div class="panel-header">
 						<h1>Satellite Catalog View</h1>
-						<button id="panelToggleBtn" type="button" aria-expanded="true" aria-controls="panelContent">Minimize</button>
+						<button id="panelToggleBtn" type="button" aria-expanded="false" aria-controls="panelContent">Expand</button>
 					</div>
 
 					<div id="panelContent">
@@ -273,9 +286,37 @@
 			<section class="card" aria-label="notes">
 			  <h3 class="label">Page Note</h3>
 			  <p class="caption">This page presents interpreted visualizations and an interactive Cesium map below.</p>
+			  <figure class="sidebar-image-wrap">
+				<button
+					type="button"
+					id="satelliteGrowthTrigger"
+					class="snippet-trigger"
+					data-full-src="Images/SatelliteGrowth.png"
+					data-alt="Satellite growth chart"
+					data-title="Satellite Growth"
+				>
+					<img
+						class="snippet-thumb"
+						src="Images/SatelliteGrowth.png"
+						alt="Satellite growth chart"
+						loading="lazy"
+					>
+				</button>
+				<figcaption class="sidebar-subtext">Edit this caption with your own note about the chart.</figcaption>
+			  </figure>
 			</section>
 		  </aside>
 		</section>
+
+		<dialog class="image-modal" id="imageModal" aria-labelledby="imageModalTitle">
+			<div class="modal-shell">
+				<div class="modal-meta">
+					<p class="modal-title" id="imageModalTitle">Image preview</p>
+					<button type="button" class="modal-close" id="modalCloseBtn">Close</button>
+				</div>
+				<img id="imageModalImg" alt="">
+			</div>
+		</dialog>
 
 		<!-- Original embedded Cesium section moved earlier into the article content -->
 
@@ -343,6 +384,11 @@
 				const stepSecondsInput = document.getElementById('stepSeconds');
 				const durationMinutesInput = document.getElementById('durationMinutes');
 				const trailSecondsInput = document.getElementById('trailSeconds');
+				const satelliteGrowthTrigger = document.getElementById('satelliteGrowthTrigger');
+				const imageModal = document.getElementById('imageModal');
+				const imageModalImg = document.getElementById('imageModalImg');
+				const imageModalTitle = document.getElementById('imageModalTitle');
+				const modalCloseBtn = document.getElementById('modalCloseBtn');
 
 				let activeSatelliteSource = null;
 				let localCatalogPromise = null;
@@ -1241,6 +1287,24 @@
 				});
 				panelToggleBtn.addEventListener('click', () => {
 					setPanelCollapsed(!controlPanel.classList.contains('collapsed'));
+				});
+				satelliteGrowthTrigger.addEventListener('click', () => {
+					imageModalImg.src = satelliteGrowthTrigger.dataset.fullSrc;
+					imageModalImg.alt = satelliteGrowthTrigger.dataset.alt || '';
+					imageModalTitle.textContent = satelliteGrowthTrigger.dataset.title || 'Image preview';
+					imageModal.showModal();
+					modalCloseBtn.focus();
+				});
+				modalCloseBtn.addEventListener('click', () => imageModal.close());
+				imageModal.addEventListener('click', (event) => {
+					if (event.target === imageModal) {
+						imageModal.close();
+					}
+				});
+				document.addEventListener('keydown', (event) => {
+					if (event.key === 'Escape' && imageModal.open) {
+						imageModal.close();
+					}
 				});
 				loadBtn.addEventListener('click', loadSatelliteVisualization);
 				initializeUi();

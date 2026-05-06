@@ -26,6 +26,9 @@
 		.lead { color:#e7f2ff; font-size:1.02rem; line-height:1.55; }
 		.note { background:rgba(7,19,32,0.7); border:1px solid rgba(122,224,255,0.28); border-radius:12px; padding:0.8rem 0.9rem; }
 		.note strong { color:var(--accent); }
+			.ai-callout { margin-top:1rem; padding:0.95rem 1rem; border-radius:14px; border:1px solid rgba(255,168,84,0.55); background: linear-gradient(180deg, rgba(67, 34, 14, 0.92), rgba(35, 20, 12, 0.94)); box-shadow: 0 12px 30px rgba(18, 8, 3, 0.28), inset 0 1px 0 rgba(255, 214, 170, 0.08); }
+			.ai-callout h2 { margin-top:0; color:#ffd29f; }
+			.ai-callout p { color:#ffe9d3; }
 		.link-grid { margin-top:0.68rem; display:grid; gap:0.55rem; }
 		.link-grid a { text-decoration:none; color:var(--text); border:1px solid rgba(122,224,255,0.4); border-radius:12px; background: linear-gradient(180deg, rgba(14,37,58,0.82), rgba(8,21,35,0.88)); padding:0.72rem 0.8rem; text-transform:uppercase; font-family:"Orbitron", sans-serif; font-size:0.8rem; display:flex; justify-content:space-between; align-items:center; }
 		.link-grid a::after { content:"->"; color:var(--accent); font-family:"IBM Plex Mono", monospace; font-size:0.78rem; }
@@ -35,9 +38,19 @@
 			/* Data snippet styling for methods sidebar */
 			.data-snippets { display:grid; grid-template-columns:1fr; gap:0.6rem; justify-items:center; }
 			.data-snippets figure { margin:0; display:flex; flex-direction:column; gap:0.45rem; align-items:center; width:100%; }
+			.snippet-trigger { appearance:none; border:0; padding:0; background:none; cursor:zoom-in; width:100%; max-width:560px; }
+			.snippet-trigger:focus-visible { outline:2px solid var(--accent); outline-offset:4px; border-radius:10px; }
 			.snippet-thumb, .snippet-full { width:100%; max-width:560px; height:auto; object-fit:contain; display:block; margin:0 auto; border-radius:10px; border:1px solid rgba(122,224,255,0.12); box-shadow:0 8px 24px rgba(2,10,18,0.20); }
 			.snippet-full { max-height:420px; }
 			.snippet-caption { margin:0; color:var(--text); font-family:"IBM Plex Mono", monospace; font-size:0.78rem; text-align:center; padding:0.35rem 0.5rem; background: linear-gradient(180deg, rgba(255,255,255,0.02), rgba(0,0,0,0.02)); border-radius:8px; width:100%; max-width:520px; }
+			.image-modal { border:none; padding:0; background:transparent; width:min(92vw, 1100px); }
+			.image-modal::backdrop { background:rgba(2,10,18,0.82); backdrop-filter: blur(6px); }
+			.image-modal .modal-shell { display:grid; gap:0.65rem; padding:0.9rem; border:1px solid rgba(122,224,255,0.25); border-radius:16px; background:linear-gradient(180deg, rgba(8,20,35,0.96), rgba(5,14,24,0.98)); box-shadow:0 28px 70px rgba(0,0,0,0.55); }
+			.image-modal img { width:100%; height:auto; max-height:80vh; object-fit:contain; border-radius:12px; border:1px solid rgba(122,224,255,0.18); }
+			.image-modal .modal-meta { display:flex; justify-content:space-between; gap:1rem; align-items:center; flex-wrap:wrap; }
+			.image-modal .modal-title { margin:0; font-family:"Orbitron", sans-serif; font-size:0.9rem; letter-spacing:0.08em; text-transform:uppercase; color:var(--accent); }
+			.image-modal .modal-close { border:1px solid rgba(122,224,255,0.35); border-radius:999px; padding:0.45rem 0.8rem; font:inherit; color:var(--text); background:rgba(8,21,35,0.88); cursor:pointer; }
+			.image-modal .modal-close:hover, .image-modal .modal-close:focus-visible { border-color:rgba(122,224,255,0.95); box-shadow:0 0 0 1px rgba(122,224,255,0.25); }
 			@media (min-width:720px) { .data-snippets { grid-template-columns:1fr 1fr; } .snippet-large { grid-column:1 / -1; } }
 		@keyframes ping { 0% { box-shadow:0 0 0 0 rgba(122,224,255,0.65);} 70% { box-shadow:0 0 0 14px rgba(122,224,255,0);} 100% { box-shadow:0 0 0 0 rgba(122,224,255,0);} }
 		@media (max-width:980px) { .main-grid { grid-template-columns:1fr; } .topbar { grid-template-columns:1fr; } .top-links { justify-content:flex-start; } }
@@ -55,9 +68,9 @@
 			</div>
 			<nav class="top-links" aria-label="Research navigation">
 				<a href="index.html">Intro</a>
-				<a href="findings.html">Findings</a>
-				<a href="methods.html" aria-current="page">Methods</a>
 				<a href="literature.html">Literature</a>
+				<a href="methods.html" aria-current="page">Methods</a>
+				<a href="findings.html">Findings</a>
 				<a href="conclusion.html">Conclusion</a>
 				<a href="works-cited.html">Works Cited</a>
 			</nav>
@@ -76,7 +89,7 @@
 					<p class="indent">This project takes a bit of a combined quantitative and qualitative approach to research. Qualitative in the sense that it describes the specific issues and proposed solutions to space debris. It is also quantitative in the sense that it measures the specific numbers and distribution of satellites in space - both historically and in the current epoch.</p>
 					<p class="indent">Performing research into orbital mechanics and space debris proved to be even more complicated than originally anticipated. Confronted with an ever-increasing scope of potential research avenues and visualizations, some details had to be cut to allow the project to be completed on time. These opportunities ranged anywhere from modelling and visualizing conjunction events (satellite collision / close call predictions) in CesiumJS to describing the 11 year solar cycle which impacts the density of Earth’s upper atmosphere which can allow for the lower flight of satellites during the calm years of the cycle.</p>
 				</section>
-				<section>
+				<section class="ai-callout">
 					<h2>AI Tool Usage</h2>
 					<p>Coding AI was used in the creation of various visual elements of the project. These include the initial design of the website, CesiumJS mapping, and the use of the satellite.js library to convert raw data into a CesiumJS readable format. AI was not used in the data collection, analysis, or overall planning of the project. AI remained as an assisting tool and had no impact on the research itself.</p>
 				</section>
@@ -91,12 +104,16 @@
 					<h3 class="label">Data Snippets</h3>
 						<div class="data-snippets">
 							<figure class="snippet-row">
-								<img src="Images/CelesTrakSample.jpg" alt="Sample of CelesTrak data" class="snippet-thumb">
+								<button type="button" class="snippet-trigger" data-full-src="Images/CelesTrakSample.jpg" data-alt="Sample of CelesTrak data" data-title="CelesTrak extract">
+									<img src="Images/CelesTrakSample.jpg" alt="Sample of CelesTrak data" class="snippet-thumb">
+								</button>
 								<figcaption class="snippet-caption">CelesTrak extract (JSON sample)</figcaption>
 							</figure>
 
 							<figure class="snippet-large">
-								<img src="Images/SpaceDataSample.jpg" alt="Sample of processed space data" class="snippet-full">
+								<button type="button" class="snippet-trigger" data-full-src="Images/SpaceDataSample.jpg" data-alt="Sample of processed space data" data-title="Processed dataset preview">
+									<img src="Images/SpaceDataSample.jpg" alt="Sample of processed space data" class="snippet-full">
+								</button>
 								<figcaption class="snippet-caption">Processed dataset preview</figcaption>
 							</figure>
 						</div>
@@ -105,5 +122,46 @@
 			</aside>
 		</section>
 	</main>
+
+	<dialog class="image-modal" id="imageModal" aria-labelledby="imageModalTitle">
+		<div class="modal-shell">
+			<div class="modal-meta">
+				<p class="modal-title" id="imageModalTitle">Image preview</p>
+				<button type="button" class="modal-close" id="modalCloseBtn">Close</button>
+			</div>
+			<img id="imageModalImg" alt="">
+		</div>
+	</dialog>
+
+	<script>
+		const modal = document.getElementById('imageModal');
+		const modalImage = document.getElementById('imageModalImg');
+		const modalTitle = document.getElementById('imageModalTitle');
+		const modalCloseBtn = document.getElementById('modalCloseBtn');
+
+		function openImageModal(trigger) {
+			modalImage.src = trigger.dataset.fullSrc;
+			modalImage.alt = trigger.dataset.alt || '';
+			modalTitle.textContent = trigger.dataset.title || 'Image preview';
+			modal.showModal();
+			modalCloseBtn.focus();
+		}
+
+		document.querySelectorAll('.snippet-trigger').forEach((trigger) => {
+			trigger.addEventListener('click', () => openImageModal(trigger));
+		});
+
+		modalCloseBtn.addEventListener('click', () => modal.close());
+		modal.addEventListener('click', (event) => {
+			if (event.target === modal) {
+				modal.close();
+			}
+		});
+		document.addEventListener('keydown', (event) => {
+			if (event.key === 'Escape' && modal.open) {
+				modal.close();
+			}
+		});
+	</script>
 </body>
 </html>

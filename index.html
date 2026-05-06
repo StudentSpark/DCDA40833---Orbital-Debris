@@ -359,6 +359,13 @@
       transition: transform 160ms ease, box-shadow 160ms ease, border-color 160ms ease;
     }
 
+    .link-grid a[aria-current="page"] {
+      color: #07131f;
+      border-color: rgba(122, 224, 255, 0.95);
+      background: linear-gradient(180deg, rgba(122, 224, 255, 0.98), rgba(122, 224, 255, 0.72));
+      box-shadow: 0 0 0 1px rgba(122, 224, 255, 0.25), 0 10px 20px rgba(8, 24, 36, 0.28);
+    }
+
     .link-grid a::after {
       content: "->";
       color: var(--accent);
@@ -486,11 +493,7 @@
 
     <section class="main-grid" aria-label="Introductory content">
       <article class="card" aria-labelledby="deck-intro-title">
-        <div class="status-row" aria-label="mission status tags">
-          <span class="chip">CesiumJS Live View</span>
-          <span class="chip">Celestrak Referenced</span>
-          <span class="chip alert">Collision Cascade Watch</span>
-        </div>
+       
 
         <h1 id="deck-intro-title">Orbital Clutter, Debris, and the Kessler Threshold</h1>
         <p class="lead">
@@ -507,40 +510,19 @@
           </p>
         </section>
 
-        <div class="telemetry" aria-label="headline telemetry">
-          <article class="tile">
-            <span class="k">Catalog Source</span>
-            <span class="v">Celestrak</span>
-            <div class="bar" aria-hidden="true"><span></span></div>
-          </article>
-          <article class="tile">
-            <span class="k">Visualization Core</span>
-            <span class="v">CesiumJS</span>
-            <div class="bar" aria-hidden="true"><span></span></div>
-          </article>
-          <article class="tile">
-            <span class="k">Risk Signal</span>
-            <span class="v">Rising</span>
-            <div class="bar" aria-hidden="true"><span></span></div>
-          </article>
-        </div>
+        
       </article>
 
       <aside class="right-column" aria-label="navigation and threat context">
-        <section class="card threat-meter" aria-labelledby="threat-heading">
-          <h3 id="threat-heading">Kessler Proximity Meter</h3>
-          <div class="gauge" aria-hidden="true"><span></span></div>
-          <p class="meter-note">
-            Current projection: medium-high uncertainty with elevated collision sensitivity in dense orbital bands.
-          </p>
-        </section>
+        
 
         <nav class="card links" aria-label="Research section navigation">
           <h3>Navigate Research Brief</h3>
           <div class="link-grid">
-            <a href="findings.html">Findings</a>
-            <a href="methods.html">Methods</a>
+            <a href="index.html" aria-current="page">Intro</a>
             <a href="literature.html">Literature</a>
+            <a href="methods.html">Methods</a>
+            <a href="findings.html">Findings</a>
             <a href="conclusion.html">Conclusion</a>
             <a href="works-cited.html">Works Cited</a>
           </div>
