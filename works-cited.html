@@ -12,7 +12,7 @@
 		* { box-sizing:border-box; }
 		html, body { margin:0; min-height:100%; color:var(--text); font-family:"Rajdhani", "Segoe UI", sans-serif; background: linear-gradient(140deg, var(--bg-a) 0%, var(--bg-b) 45%, var(--bg-c) 100%); overflow-x:hidden; }
 		body::before { content:""; position:fixed; inset:0; pointer-events:none; background-image: linear-gradient(rgba(127,205,242,0.05) 1px, transparent 1px), linear-gradient(90deg, rgba(127,205,242,0.05) 1px, transparent 1px); background-size:28px 28px; mix-blend-mode:screen; z-index:0; }
-		.deck { position:relative; z-index:1; width:min(1240px, calc(100% - 1.6rem)); margin:1rem auto; padding:1rem; border-radius:24px; border:1px solid var(--line); background: linear-gradient(155deg, rgba(5,14,24,0.84), rgba(13,29,47,0.74)); box-shadow:var(--shadow); backdrop-filter: blur(4px); }
+		.deck { position:relative; z-index:1; width:calc(100% - 2rem); max-width:none; margin:0.8rem auto; padding:1rem; border-radius:24px; border:1px solid var(--line); background: linear-gradient(155deg, rgba(5,14,24,0.84), rgba(13,29,47,0.74)); box-shadow:var(--shadow); backdrop-filter: blur(4px); }
 		.topbar { display:grid; grid-template-columns: 1fr auto; gap:1rem; align-items:center; border:1px solid var(--line); border-radius:16px; padding:0.85rem 1rem; background: linear-gradient(180deg, rgba(18,41,64,0.7), rgba(8,20,35,0.72)); }
 		.tagline { display:flex; align-items:center; gap:0.8rem; min-width:0; }
 		.beacon { width:14px; height:14px; border-radius:50%; background:var(--accent); box-shadow:0 0 0 0 rgba(122,224,255,0.7); animation: ping 2.1s infinite; flex-shrink:0; }
