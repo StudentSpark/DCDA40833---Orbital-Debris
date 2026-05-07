@@ -79,6 +79,14 @@
 	  #status.error { color:#fca5a5; }
 
 	  #embeddedCesiumContainer { width:100%; height:500px; background: radial-gradient(circle at 20% 20%, #16345f 0%, #071223 55%, #02050b 100%); overflow:hidden; border-radius:12px; }
+	#embeddedCesiumSection:fullscreen,
+	#embeddedCesiumSection:-webkit-full-screen { width:100vw; height:100vh; margin:0; border-radius:0; overflow:hidden; }
+	#embeddedCesiumSection:fullscreen #embeddedCesiumHeader,
+	#embeddedCesiumSection:-webkit-full-screen #embeddedCesiumHeader { position:fixed; inset:0 0 auto 0; z-index:25; }
+	#embeddedCesiumSection:fullscreen #embeddedControlPanel,
+	#embeddedCesiumSection:-webkit-full-screen #embeddedControlPanel { position:fixed; z-index:30; top:5.7rem; max-height:calc(100vh - 7rem); width:min(380px, calc(100vw - 28px)); }
+	#embeddedCesiumSection:fullscreen #embeddedCesiumContainer,
+	#embeddedCesiumSection:-webkit-full-screen #embeddedCesiumContainer { position:fixed; inset:0; width:100vw; height:100vh; border-radius:0; }
 
 	  @keyframes ping { 0% { box-shadow: 0 0 0 0 rgba(122,224,255,0.65);} 70% { box-shadow:0 0 0 14px rgba(122,224,255,0);} 100% { box-shadow:0 0 0 0 rgba(122,224,255,0);} }
 	  @media (max-width:980px) { .main-grid { grid-template-columns:1fr; } .topbar { grid-template-columns:1fr; } .top-links { justify-content:flex-start; } }
@@ -350,6 +358,7 @@
 				}
 
 				Cesium.Ion.defaultAccessToken = await loadIonAccessToken();
+				const fullscreenTarget = document.getElementById('embeddedCesiumSection');
 
 				const viewer = new Cesium.Viewer('embeddedCesiumContainer', {
 					terrainProvider: new Cesium.EllipsoidTerrainProvider(),
@@ -358,12 +367,20 @@
 					shouldAnimate: true,
 					selectionIndicator: false,
 					infoBox: true,
+					fullscreenElement: fullscreenTarget,
 					shadows: false
 				});
 
 				viewer.scene.globe.enableLighting = true;
 				viewer.scene.skyAtmosphere.show = true;
 				viewer.scene.moon.show = true;
+
+				function resizeViewerToFullscreen() {
+					setTimeout(() => viewer.resize(), 50);
+				}
+
+				document.addEventListener('fullscreenchange', resizeViewerToFullscreen);
+				document.addEventListener('webkitfullscreenchange', resizeViewerToFullscreen);
 
 				const statusElement = document.getElementById('status');
 				const groupNoteElement = document.getElementById('groupNote');

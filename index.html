@@ -7,6 +7,9 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@500;700;800&family=Rajdhani:wght@500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <script src="https://cesium.com/downloads/cesiumjs/releases/1.139.1/Build/Cesium/Cesium.js"></script>
+  <link href="https://cesium.com/downloads/cesiumjs/releases/1.139.1/Build/Cesium/Widgets/widgets.css" rel="stylesheet">
+  <script src="https://cdn.jsdelivr.net/npm/satellite.js@5.0.0/dist/satellite.min.js"></script>
   <style>
     :root {
       --bg-a: #0f1c2d;
@@ -392,6 +395,227 @@
       letter-spacing: 0.03em;
     }
 
+    #embeddedCesiumSection {
+      position: relative;
+      border: 1px solid var(--line);
+      border-radius: 12px;
+      overflow: hidden;
+      background: rgba(6, 19, 33, 0.72);
+      margin: 0.8rem 0;
+    }
+
+    #embeddedCesiumHeader {
+      padding: 0.8rem;
+      border-bottom: 1px solid rgba(122, 224, 255, 0.22);
+      background: rgba(8, 20, 35, 0.7);
+    }
+
+    #embeddedCesiumHeader h2 {
+      margin: 0;
+    }
+
+    #embeddedControlPanel {
+      position: absolute;
+      z-index: 20;
+      top: 100px;
+      left: 1px;
+      width: min(380px, calc(100% - 28px));
+      background: rgba(10, 18, 31, 0.84);
+      border: 1px solid rgba(255, 255, 255, 0.22);
+      border-radius: 12px;
+      backdrop-filter: blur(8px);
+      box-shadow: 0 10px 28px rgba(0, 0, 0, 0.45);
+      padding: 12px;
+      line-height: 1.35;
+      max-height: calc(100% - 148px);
+      overflow-y: auto;
+    }
+
+    #embeddedControlPanel h1 {
+      margin: 0;
+      font-size: 1rem;
+      color: var(--accent);
+      letter-spacing: 0.03em;
+      text-transform: uppercase;
+    }
+
+    #embeddedControlPanel p {
+      margin: 0 0 10px;
+      opacity: 0.95;
+      font-size: 0.9rem;
+      color: #eaf4ff;
+    }
+
+    #embeddedControlPanel.collapsed {
+      width: auto;
+      max-width: calc(100% - 28px);
+      padding: 10px 12px;
+    }
+
+    #embeddedControlPanel.collapsed #panelContent {
+      display: none;
+    }
+
+    .panel-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 8px;
+      margin-bottom: 8px;
+    }
+
+    #panelToggleBtn {
+      border: 1px solid rgba(255, 255, 255, 0.35);
+      border-radius: 8px;
+      padding: 4px 8px;
+      font-size: 0.75rem;
+      color: #eaf4ff;
+      background: rgba(255, 255, 255, 0.08);
+      cursor: pointer;
+    }
+
+    .controls {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 8px;
+      margin-bottom: 10px;
+    }
+
+    .controls label {
+      display: block;
+      font-size: 0.78rem;
+      margin-bottom: 3px;
+      color: #bfdbfe;
+    }
+
+    .controls input,
+    .controls select,
+    #groupSelect,
+    #multiGroupSelect {
+      width: 100%;
+      box-sizing: border-box;
+      border-radius: 7px;
+      border: 1px solid rgba(255, 255, 255, 0.28);
+      padding: 7px;
+      background: rgba(255, 255, 255, 0.08);
+      color: #eaf4ff;
+    }
+
+    #groupSelect {
+      margin-bottom: 10px;
+    }
+
+    #multiGroupSelect {
+      min-height: 108px;
+      margin-bottom: 10px;
+    }
+
+    #multiGroupSection {
+      margin-bottom: 10px;
+      padding: 8px;
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      border-radius: 8px;
+      background: rgba(255, 255, 255, 0.04);
+    }
+
+    .toggle-row {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      margin-bottom: 8px;
+      font-size: 0.8rem;
+      color: #bfdbfe;
+    }
+
+    #loadBtn {
+      width: 100%;
+      border: none;
+      border-radius: 8px;
+      padding: 9px;
+      font-weight: 600;
+      color: #021119;
+      background: linear-gradient(90deg, #7ae0ff, #8cf8c3);
+      cursor: pointer;
+    }
+
+    #groupNote {
+      margin-top: 8px;
+      font-size: 0.78rem;
+      color: #fde68a;
+      min-height: 1rem;
+    }
+
+    #sourceNote {
+      margin-top: 6px;
+      font-size: 0.75rem;
+      color: #a7f3d0;
+      min-height: 1rem;
+    }
+
+    #datasetIndicator {
+      margin-top: 6px;
+      font-size: 0.75rem;
+      color: #93c5fd;
+      min-height: 1rem;
+    }
+
+    #datasetIndicator.error {
+      color: #fca5a5;
+    }
+
+    #status {
+      margin-top: 8px;
+      font-size: 0.8rem;
+      min-height: 1.1rem;
+      color: #dbeafe;
+    }
+
+    #status.error {
+      color: #fca5a5;
+    }
+
+    #embeddedCesiumContainer {
+      width: 100%;
+      height: 500px;
+      background: radial-gradient(circle at 20% 20%, #16345f 0%, #071223 55%, #02050b 100%);
+      overflow: hidden;
+      border-radius: 12px;
+    }
+
+    #embeddedCesiumSection:fullscreen,
+    #embeddedCesiumSection:-webkit-full-screen {
+      width: 100vw;
+      height: 100vh;
+      margin: 0;
+      border-radius: 0;
+      overflow: hidden;
+    }
+
+    #embeddedCesiumSection:fullscreen #embeddedCesiumHeader,
+    #embeddedCesiumSection:-webkit-full-screen #embeddedCesiumHeader {
+      position: fixed;
+      inset: 0 0 auto 0;
+      z-index: 25;
+    }
+
+    #embeddedCesiumSection:fullscreen #embeddedControlPanel,
+    #embeddedCesiumSection:-webkit-full-screen #embeddedControlPanel {
+      position: fixed;
+      z-index: 30;
+      top: 5.7rem;
+      max-height: calc(100vh - 7rem);
+      width: min(380px, calc(100vw - 28px));
+    }
+
+    #embeddedCesiumSection:fullscreen #embeddedCesiumContainer,
+    #embeddedCesiumSection:-webkit-full-screen #embeddedCesiumContainer {
+      position: fixed;
+      inset: 0;
+      width: 100vw;
+      height: 100vh;
+      border-radius: 0;
+    }
+
     @keyframes rise {
       from {
         opacity: 0;
@@ -485,7 +709,7 @@
         <span class="beacon" aria-hidden="true"></span>
         <div>
           <p class="label">Orbital Traffic Interference System</p>
-          <p class="title">Kessler Syndrome Early Warning Program</p>
+          <p class="title">Introduction</p>
         </div>
       </div>
       <p class="epoch">Epoch: Early 2026</p>
@@ -496,11 +720,104 @@
        
 
         <h1 id="deck-intro-title">Orbital Debris and the Kessler Syndrome</h1>
-        <p class="lead">
-          This project frames near-Earth orbit as an active systems problem: not simply a crowded sky,
-          but a dynamic mesh of operating satellites, legacy hardware, spent rocket bodies, and fragments
-          capable of triggering nonlinear collision chains.
-        </p>
+
+        <div id="embeddedCesiumSection">
+          <div id="embeddedCesiumHeader">
+            <h2>Interactive Satellite Map</h2>
+            <p style="margin: 0.5rem 0 0 0; font-size: 0.9rem; color: #666;">Explore the current satellite catalog in 3D. Use the controls on the left to filter by satellite type and visualization parameters.</p>
+          </div>
+
+          <div id="embeddedControlPanel" class="collapsed">
+            <div class="panel-header">
+              <h1>Satellite Catalog View</h1>
+              <button id="panelToggleBtn" type="button" aria-expanded="false" aria-controls="panelContent">Expand</button>
+            </div>
+
+            <div id="panelContent">
+              <p>
+                Loads local JSON orbital elements, converts them into CZML samples with
+                satellite.js, then renders the selected group in one Cesium CZML data source.
+              </p>
+
+              <div class="controls">
+                <div>
+                  <label for="datasetSelect">Dataset preset</label>
+                  <select id="datasetSelect" aria-label="Dataset preset selector">
+                    <option value="CURRENT">Current catalog (all launch years)</option>
+                    <option value="PRE_1970">Launch-era view: 1960s and earlier</option>
+                    <option value="PRE_1980">Launch-era view: through 1979</option>
+                    <option value="PRE_2000">Launch-era view: through 1999</option>
+                    <option value="RANGE_2000_2010">Modern launch-era view: 2000-2010</option>
+                    <option value="POST_2010">Modern launch-era view: 2010-present</option>
+                  </select>
+                </div>
+                <div>
+                  <label for="globeStyleSelect">Globe style</label>
+                  <select id="globeStyleSelect" aria-label="Globe style selector">
+                    <option value="SATELLITE">Satellite imagery</option>
+                    <option value="STREETS">Street map</option>
+                    <option value="DARK">Dark no-basemap</option>
+                  </select>
+                </div>
+              </div>
+
+              <div class="controls">
+                <div>
+                  <label for="maxCount">Max satellites</label>
+                  <input id="maxCount" type="number" min="10" max="5000" step="10" value="500">
+                </div>
+                <div>
+                  <label for="stepSeconds">Sample step (sec)</label>
+                  <input id="stepSeconds" type="number" min="10" max="300" step="10" value="60">
+                </div>
+                <div>
+                  <label for="durationMinutes">Duration (min)</label>
+                  <input id="durationMinutes" type="number" min="20" max="43200" step="10" value="90">
+                </div>
+                <div>
+                  <label for="trailSeconds">Orbit trail (sec)</label>
+                  <input id="trailSeconds" type="number" min="60" max="21600" step="60" value="5400">
+                </div>
+              </div>
+
+              <label for="groupSelect" style="display:block;font-size:0.78rem;margin-bottom:3px;color:#bfdbfe;">Display Group</label>
+              <select id="groupSelect" aria-label="Display group selector"></select>
+
+              <div id="multiGroupSection">
+                <label class="toggle-row" for="multiGroupMode">
+                  <input id="multiGroupMode" type="checkbox">
+                  Enable multi-group mode
+                </label>
+                <label for="multiGroupSelect" style="display:block;font-size:0.78rem;margin-bottom:3px;color:#bfdbfe;">Choose multiple groups (Ctrl/Cmd+click)</label>
+                <select id="multiGroupSelect" aria-label="Multiple group selector" multiple></select>
+                <div class="controls" style="margin-bottom:6px;">
+                  <div>
+                    <label for="perGroupCount">Per-group max count</label>
+                    <input id="perGroupCount" type="number" min="1" max="5000" step="1" value="100">
+                  </div>
+                  <div>
+                    <label for="colorByGroup">Color by group</label>
+                    <input id="colorByGroup" type="checkbox" checked>
+                  </div>
+                </div>
+              </div>
+
+              <label class="toggle-row" for="enduranceMode">
+                <input id="enduranceMode" type="checkbox">
+                Endurance mode (maximize satellites across groups for long runs)
+              </label>
+
+              <button id="loadBtn" type="button">Visualize Sattelites</button>
+              <div id="groupNote"></div>
+              <div id="sourceNote"></div>
+              <div id="datasetIndicator"></div>
+              <div id="status">Waiting to load local satellite JSON data...</div>
+            </div>
+          </div>
+
+          <div id="embeddedCesiumContainer"></div>
+        </div>
+      
 
         <section class="abstract" aria-labelledby="abstract-heading">
           <h2 id="abstract-heading">Abstract</h2>
@@ -517,7 +834,7 @@
         
 
         <nav class="card links" aria-label="Research section navigation">
-          <h3>Navigate Research Brief</h3>
+          <h3>Navigation</h3>
           <div class="link-grid">
             <a href="index.html" aria-current="page">Intro</a>
             <a href="literature.html">Literature</a>
@@ -538,5 +855,7 @@
       </aside>
     </section>
   </main>
+
+  <script type="module" src="index-map.js"></script>
 </body>
 </html>
