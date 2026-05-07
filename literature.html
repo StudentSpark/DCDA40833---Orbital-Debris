@@ -31,11 +31,9 @@
 		.link-grid a::after { content:"->"; color:var(--accent); font-family:"IBM Plex Mono", monospace; font-size:0.78rem; }
 		.right-column { display:grid; gap:0.9rem; }
 		.caption { margin:0; border-top:1px dashed rgba(122,224,255,0.3); padding-top:0.8rem; color:#c7ddf0; font-family:"IBM Plex Mono", monospace; font-size:0.77rem; line-height:1.5; letter-spacing:0.03em; }
-			/* Sidebar image/snippet styles (match findings/methods) */
+			/* Sidebar image styles */
 			.sidebar-image-wrap { margin-top:0.8rem; text-align:center; }
-			.snippet-trigger { appearance:none; border:0; padding:0; background:none; cursor:zoom-in; width:100%; max-width:500px; }
-			.snippet-trigger:focus-visible { outline:2px solid var(--accent); outline-offset:4px; border-radius:10px; }
-			.snippet-thumb { width:100%; max-width:500px; height:auto; object-fit:contain; display:block; margin:0 auto; border-radius:10px; border:1px solid rgba(122,224,255,0.12); box-shadow:0 8px 24px rgba(2,10,18,0.20); }
+			.sidebar-thumb { width:100%; max-width:500px; height:auto; object-fit:contain; display:block; margin:0 auto; border-radius:10px; border:1px solid rgba(122,224,255,0.12); box-shadow:0 8px 24px rgba(2,10,18,0.20); }
 			.sidebar-subtext { margin:0.45rem auto 0; max-width:320px; font-size:0.78rem; color:#a8c2da; line-height:1.4; }
 			#embeddedCesiumSection:fullscreen,
 			#embeddedCesiumSection:-webkit-full-screen { width:100vw; height:100vh; margin:0; border-radius:0; overflow:hidden; }
@@ -112,66 +110,17 @@ Due to the nature of orbits and physics, satellites can easily stay in orbit for
 					<h3 class="label">Historic Satellite</h3>
 					<p class="caption">It started with one satellite in 1957.</p>
 					<figure class="sidebar-image-wrap">
-						<button
-							type="button"
-							class="snippet-trigger"
-							data-full-src="Images/sputnik.jpg"
-							data-alt="Sputnik"
-							data-title="Sputnik"
+						<img
+							class="sidebar-thumb"
+							src="Images/sputnik.jpg"
+							alt="Sputnik"
+							loading="lazy"
 						>
-							<img
-								class="snippet-thumb"
-								src="Images/sputnik.jpg"
-								alt="Sputnik"
-								loading="lazy"
-							>
-						</button>
 						<figcaption class="sidebar-subtext">Sputnik, the first satellite in orbit. Launched by the Soviet Union in 1957. (Image: NASA)</figcaption>
 					</figure>
 				</section>
 			</aside>
 		</section>
 	</main>
-
-	<dialog class="image-modal" id="imageModal" aria-labelledby="imageModalTitle">
-		<div class="modal-shell">
-			<div class="modal-meta">
-				<p class="modal-title" id="imageModalTitle">Image preview</p>
-				<button type="button" class="modal-close" id="modalCloseBtn">Close</button>
-			</div>
-			<img id="imageModalImg" alt="">
-		</div>
-	</dialog>
-
-	<script>
-		const modal = document.getElementById('imageModal');
-		const modalImage = document.getElementById('imageModalImg');
-		const modalTitle = document.getElementById('imageModalTitle');
-		const modalCloseBtn = document.getElementById('modalCloseBtn');
-
-		function openImageModal(trigger) {
-			modalImage.src = trigger.dataset.fullSrc;
-			modalImage.alt = trigger.dataset.alt || '';
-			modalTitle.textContent = trigger.dataset.title || 'Image preview';
-			modal.showModal();
-			modalCloseBtn.focus();
-		}
-
-		document.querySelectorAll('.snippet-trigger').forEach((trigger) => {
-			trigger.addEventListener('click', () => openImageModal(trigger));
-		});
-
-		modalCloseBtn.addEventListener('click', () => modal.close());
-		modal.addEventListener('click', (event) => {
-			if (event.target === modal) {
-				modal.close();
-			}
-		});
-		document.addEventListener('keydown', (event) => {
-			if (event.key === 'Escape' && modal.open) {
-				modal.close();
-			}
-		});
-	</script>
 </body>
 </html>
