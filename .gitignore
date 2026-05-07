@@ -1,5 +1,5 @@
 .token
-
+.vscode
 # macOS
 .DS_Store
 .AppleDouble
